@@ -1,0 +1,5 @@
+---
+- hosts: localhost
+  tasks:
+  - name: reboot the servers
+    action: command /sbin/reboot -t now
