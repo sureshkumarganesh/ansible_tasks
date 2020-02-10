@@ -1,0 +1,18 @@
+
+#PLAYBOOK TO CREATE A EC2_INSTANCE AND STOPPING, AND TERMINATION
+
+---
+- hosts: localhost
+  tasks:
+  - name: create a ec2_instance
+    ec2:
+      aws_access_key: AKIAIY3WYXLMC2QVENXA
+      aws_secret_key: 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
+      count: 1
+      instance_ids: i-087ecbec335b5fafb
+      image: ami-0520e698dd500b1d1
+      instance_type: t2.micro
+      key_name: nivikey
+      region: us-east-2
+      state: absent
+      zone: us-east-2a

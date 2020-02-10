@@ -1,0 +1,9 @@
+---
+- hosts: localhost
+  tasks:
+  - name: create a  text file
+    file: path=/home/ec2-user/suresh/localplay/text.txt  state=touch
+  become: true 
+...
+                      
+

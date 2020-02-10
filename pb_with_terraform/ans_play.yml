@@ -1,0 +1,9 @@
+---
+- hosts: localhost
+  become: true
+  tasks: Create a directory
+  - file:
+      path: /home/ec2-user/playfile.txt
+      state: touch
+      mode: 0775
+... 
