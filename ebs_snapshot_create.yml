@@ -3,17 +3,17 @@
   tasks:
   - name: get the details of ec2
     ec2:
-      ec2_url: ec2-18-223-143-25.us-east-2.compute.amazonaws.com
-      aws_access_key: AKIAJ5QSKSVPJ5EANJXQ
-      aws_secret_key: 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
+      ec2_url: 
+      aws_access_key: 
+      aws_secret_key:
       aws_region: us-east-2
-      key_name: awskey
+      key_name: <awskey>
       instance_type: t2.micro
       image: ami-0520e698dd500b1d1
       
   - name: Take a snapshot of a EBS volume
     ec2_snapshot:
-      volume_id: vol-08233783a787d25a8
+      volume_id: 
       description: snapshot of /data from DB is Taken /Date and Time
   - debug:
       msg: snapshot taken
