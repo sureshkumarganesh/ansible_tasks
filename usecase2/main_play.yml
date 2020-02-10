@@ -1,0 +1,72 @@
+---
+- hosts: group0
+  gather_facts: true
+  
+  tasks:
+  - name: Install nginx
+    yum: name={{ item }} state=present
+    become: yes
+    with_items:
+    - nginx
+    - php-mysqli
+    - php
+    - php-cli
+    - python3-pip
+    tags: first
+  
+  - name: Start the nginx service
+    become: yes
+    service:
+      name: nginx
+      state: started
+      enabled: true
+    tags: first
+  
+  - name: Make sure pymysql is present
+    become: yes
+    pip:
+      name: pymysql
+      state: present
+
+  - name: create a directory if itdoes not exist
+    become: yes
+    file:
+      path: /usr/share/nginx/html/
+      state: directory 
+      mode: '0755'
+    tags: first
+
+  - name: move directory contents
+    become: yes
+    copy:
+      src: /home/ec2-user/suresh/usecase2/index.html
+      dest: /usr/share/nginx/html/start.html
+      mode: a+rwx
+    tags: second
+
+
+- hosts: group1
+  tasks:
+  - name: Install MySql
+    yum: name={{ item }} state=present
+    become: yes
+    with_items:
+    - mysql-server
+    - php-mysqli
+    - php
+    - php-cli
+    - python36
+    - python3-pip
+
+  - name: Check pgmysql is present
+    become: yes
+    pip:
+      name: pymysql
+      state: present
+
+  - name: Start the MySQL service
+    become: yes
+    service:
+      name: mysqld
+      state: started
+      enabled: true    

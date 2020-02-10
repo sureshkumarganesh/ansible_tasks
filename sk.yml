@@ -1,0 +1,11 @@
+---
+- hosts: localhost
+  tasks:
+  - name: create a  blank file
+    file:
+      path: ./sking.txt
+      content: This is playbook form server
+      state: touch
+  - debug:
+      msg:  Playbook running 
+
