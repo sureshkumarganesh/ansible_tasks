@@ -1,0 +1,21 @@
+---
+- hosts: localhost
+  become: true
+  tasks:
+  - name: create  a file
+    file:
+      path: /root/playbooks/output.txt
+      state: touch
+      mode: '0777'
+  - name: to print all users inside a file
+    shell:  "cut -d: -f1 /etc/passwd > ./output.txt" #"awk -F: '{print $1}' /etc/passwd >> ./output.txt" 
+  - debug: 
+      msg: "{{ lookup('file', 'output.txt') }}"
+
+
+#  - debug: var=item
+#    with_file:
+#      - "./output.txt"
+#  - name: print the users
+#    command: "cat ./output.txt"
+

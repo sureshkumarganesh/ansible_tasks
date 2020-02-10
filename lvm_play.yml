@@ -1,0 +1,50 @@
+---
+- hosts: localhost
+  become: true
+#  become_method: sudo
+#  become_user: root
+#  remote_user: ansible
+  tasks:
+#  - name: Create a partition
+#    parted:
+#      device: /dev/xvda
+#      number: 3
+#      part_end: 10GiB
+#      flags: [ lvm ]
+#      state: present
+  - name: Create a Physical Volume and Volume group
+    lvg:
+      pvs: /dev/xvda2
+      vg: vgrp
+#      pv_options: '-Z y'
+      pesize: 500k
+      force: no
+      state: present
+  - name: Create a logical volume of size 512M
+    lvol:
+      vg: vgrp
+      lv: lvm_sk
+      size: 300k
+      active: yes
+      force: no
+#     pvs: /dev/xvda
+      state: present
+
+  - name: Create a ext4 filesystem on lvm  /dev/mapper/vgrp_sk-lvm_sk
+    filesystem:
+      fstype: ext4
+      dev: /dev/mapper/vgrp-lvm_sk
+      force: no
+  - name: Create a directory to mount the filesystem.
+    file:
+      path: ./mount_point
+      state: directory
+      mode: '0755'
+  - name: mount the created file system
+    mount:
+      path: ./mountpoint
+      src:  /dev/mapper/vgrp-lvm_sk
+      fstype: ext4
+#      opts: rw,nosuid,noexec
+      state: mounted
+...

@@ -1,0 +1,9 @@
+---
+- hosts: localhost
+  become: true
+  tasks:
+  - name: to store a value of a command ina file
+    shell:  "awk -F: '{print $1}' /etc/passwd > ./output.txt"
+    register: users
+  - debug:
+      msg: "{{ users}}"

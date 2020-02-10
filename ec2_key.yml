@@ -1,0 +1,11 @@
+---
+- hosts: localhost
+  become: true
+  tasks:
+  - name: to create new keypair
+    ec2_key:
+      debug_botocore_endpoint_logs: no
+      name: aws_key
+      wait: yes
+      state: present
+      region: us-east-2

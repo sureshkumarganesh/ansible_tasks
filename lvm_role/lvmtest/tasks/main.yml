@@ -1,0 +1,44 @@
+---
+# tasks file for lvmtest
+- name: Create a partition
+  parted:
+    device: "/dev/{{ disk_name }}"
+    number: 3
+    part_end: "{{ part_size }}"
+    flags: [ lvm ]
+    state: present
+- name: Create a Physical Volume and Volume group
+  lvg:
+    pvs: "/dev/{{ disk_name }}"
+    vg: "{{ vg_name }}"
+    force: no
+    state: present
+- name: Create a logical volume of size 512M
+  lvol:
+    vg: "{{ vg_name }}"
+    lv: "{{ lv_name }}"
+    size: "{{ lvm_size }}"
+    active: yes
+    force: no
+    state: present
+- name: Create a ext4 filesystem on lvm  /dev/mapper/vgrp_sk-lvm_sk
+  filesystem:
+    fstype: "{{ file_sys_type }}"
+    dev: "/dev/mapper/{{ vg_name }}-{{ lv_name }}"
+    force: no
+- name: Create a directory to mount the filesystem.
+  file:
+    path: "{{ mount_location }}"
+    state: directory
+    mode: '0755'
+- name: mount the created file system
+  mount:
+    path: 
+    src: "/dev/mapper/{{ vg_name }}-{{ lv_name }}"
+    fstype: "{{ file_sys_type }}"
+#    opts: rw,nosuid,noexec
+    state: mounted
+- debug:
+    msg: "{ LVM successfully created}"
+...
+
