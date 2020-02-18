@@ -1,0 +1,111 @@
+---
+- hosts: localhost
+  become: true
+  tasks:
+  # This part is for fullfilling the Pre-requisites
+  - name: SELinux
+    shell: yum -y install policycoreutils-python
+  - shell: semanage port -a -t http_port_t -p tcp 8050
+  - shell: semanage port -a -t http_port_t -p tcp 8051
+  - shell: semanage port -a -t http_port_t -p tcp 8052
+  - shell: setsebool -P httpd_can_network_connect 1
+  - name: Firewalld
+    shell: systemctl stop firewalld
+  - shell: systemctl disable firewalld
+  
+  # This Block is for the Centos x86_64  Repositories
+  - name: Activating EPEL
+    shell: yum -y install epel-release
+  - name: Activating Software collections
+    shell: yum -y install centos-release-scl centos-release-scl-rh
+  - name: AWX Repo
+    shell: yum install -y wget
+  - shell: wget -O /etc/yum.repos.d/ansible-awx.repo https://copr.fedorainfracloud.org/coprs/mrmeee/ansible-awx/repo/epel-7/mrmeee-ansible-awx-epel-7.repo
+  - name: Rabbitmq and Erlang
+    shell: echo "[bintraybintray-rabbitmq-rpm] 
+     name=bintray-rabbitmq-rpm 
+     baseurl=https://dl.bintray.com/rabbitmq/rpm/rabbitmq-server/v3.7.x/el/7/
+     gpgcheck=0 
+     repo_gpgcheck=0 
+     enabled=1" > /etc/yum.repos.d/rabbitmq.repo
+  - shell: echo "[bintraybintray-rabbitmq-rpm] 
+     name=bintray-rabbitmq-rpm 
+     baseurl=https://dl.bintray.com/rabbitmq/rpm/rabbitmq-server/v3.7.x/el/7/
+     gpgcheck=0 
+     repo_gpgcheck=0 
+     enabled=1" > /etc/yum.repos.d/rabbitmq.repo
+  - name: Install RabbitMQ
+    shell: yum -y install rabbitmq-server
+  - name: Install Git
+    shell: yum -y install rh-git29
+  - name: Install PostgreSQL and memcached
+    shell: yum install -y rh-postgresql10 memcached
+  - name: Install NGINX
+    shell: yum -y install nginx
+  - name: Install Python dependencies ( Centos )
+    shell: yum -y install rh-python36
+  - shell: yum -y install --disablerepo='*' --enablerepo='copr:copr.fedorainfracloud.org:mrmeee:ansible-awx, base' -x *-debuginfo rh-python36*
+  
+  # This Block the AWX Configuration
+  - name: Initialize DB
+    shell: scl enable rh-postgresql10 "postgresql-setup initdb"
+  - name: Start services -  Postgresql Database
+    shell: systemctl start rh-postgresql10-postgresql.service
+  - name: Start RabbitMQ services
+    shell: systemctl start rabbitmq-server
+  - name: Create Postgres user and DB
+    shell: scl enable rh-postgresql10 "su postgres -c \"createuser -S awx\""
+  - shell: scl enable rh-postgresql10 "su postgres -c \"createdb -O awx awx\""
+  - name: Run a script with arguments (free form)
+    script: scripts.sh 
+  - name: Configure NGINX as proxy
+    shell: wget -O /etc/nginx/nginx.conf https://raw.githubusercontent.com/MrMEEE/awx-build/master/nginx.conf
+  # This block Enables  the AWX Services
+  - name: Start AWX service
+    shell: systemctl start awx
+  - name: Enabling AWX services
+    shell: systemctl enable awx
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
