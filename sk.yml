@@ -3,7 +3,7 @@
   tasks:
   - name: create a  blank file
     file:
-      path: ./sking.txt
+      path: /var/sking.txt
       content: This is playbook form server
       state: touch
   - debug:
