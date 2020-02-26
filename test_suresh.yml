@@ -1,5 +1,5 @@
 ---
-- hosts: 10.1.150.27
+- hosts: localhost
   become: true
   tasks:
   - name: check loop in REST API
