@@ -1,0 +1,9 @@
+---
+- hosts: 10.1.150.27
+  become: true
+  tasks:
+  - name: check loop in REST API
+    user:
+      name: "{{ uname }}"
+      groups: "{{ ugroups }}"
+      state: present
