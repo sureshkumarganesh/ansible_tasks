@@ -1,0 +1,8 @@
+{% for item in out |dict2items|subelements('value') %}
+{{item.key}}:{{item.value.dest}}
+{% for item1 in item |dict2items%}
+--------------------------------------------------
+{% endfor %}
+-------------------------------------------
+-------------------------------------------
+{% endfor %}

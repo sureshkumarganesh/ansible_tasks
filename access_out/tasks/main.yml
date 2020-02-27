@@ -1,0 +1,15 @@
+---
+# tasks file for access_out
+- file:
+    path: ~/prasanth_sample.txt
+    state: touch
+  register: out
+- debug: var=out
+
+- template:
+    src: ../templates/main.j2
+    dest: /home/ec2-user/prasanth_output.txt
+  register: out1
+
+- debug: var=out1
+
